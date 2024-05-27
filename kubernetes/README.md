@@ -7,7 +7,7 @@
 -  Setup <a href="https://github.com/DevMadhup/wanderlust/blob/devops/kubernetes/kubeadm.md"><u> Kubeadm </a></u>
 
 #
-## Steps for Jenkins CI/CD:
+## Steps for Kubernetes deployment:
 
 1) Become root user :
 ```bash
