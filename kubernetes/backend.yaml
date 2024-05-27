@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: madhupdevops/backend-wanderlust:2.1.2
+          image: madhupdevops/backend-wanderlust:v2.1.3
           ports:
             - containerPort: 8080
 ---
@@ -28,9 +28,11 @@ metadata:
   name: backend-service
   namespace: wanderlust
 spec:
+  type: NodePort
   selector:
     app: backend
   ports:
     - port: 8080
       targetPort: 8080
       protocol: TCP
+      nodePort: 31100
