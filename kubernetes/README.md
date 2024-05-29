@@ -145,13 +145,13 @@ cd ../kubernetes
     ![Peristent volume Claim](https://github.com/DevMadhup/wanderlust/blob/devops/kubernetes/assets/pvc.png)
 
     - Create MongoDB deployment and service :
-    > Note: Wait for 3-4 mins to get mongodb and service should be up, otherwise mongodb-service will not connect to backend.
     ```bash
     kubectl apply -f mongodb.yaml 
     ```
     ![MongoDb](https://github.com/DevMadhup/wanderlust/blob/devops/kubernetes/assets/mongo.png)
 
     - Create Redis deployment and service :
+    > Note: Wait for 3-4 mins to get mongodb, redis pods and service should be up, otherwise backend-service will not connect.
     ```bash
     kubectl apply -f redis.yaml 
     ```
@@ -177,7 +177,7 @@ kubectl get all
 ![all deployments and services](https://github.com/DevMadhup/wanderlust/blob/devops/kubernetes/assets/all-deps.png)
 
 18) Check logs for all the pods :
-> Note: This is mandatory to ensure all pods and services are connected or not
+> Note: This is mandatory to ensure all pods and services are connected or not, if not then recreate deployments
 ```bash
 kubectl logs <pod-name>
 ```
