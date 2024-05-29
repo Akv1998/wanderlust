@@ -63,7 +63,7 @@ kubectl edit deploy coredns -n kube-system -o yaml
 #
 7) Navigate to frontend directory :
 ```bash
-cd wanderlust/frontend
+cd frontend
 ```
 
 #
