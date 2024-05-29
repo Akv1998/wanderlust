@@ -14,12 +14,16 @@ sudo apt-get update
 - <i> Installing Docker </i>
 ```bash
 sudo apt install docker.io -y
+```
+```bash
 sudo chmod 777 /var/run/docker.sock
 ```
 
 - <i> Installing Required Dependencies for Kubernetes kubeadm </i>
 ```bash
 sudo apt-get install -y apt-transport-https ca-certificates curl gnupg
+```
+```bash
 sudo mkdir -p -m 755 /etc/apt/keyrings
 ```
 
@@ -27,6 +31,8 @@ sudo mkdir -p -m 755 /etc/apt/keyrings
 
 ```bash
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+```
+```bash
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 ```
 
