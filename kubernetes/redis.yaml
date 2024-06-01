@@ -23,7 +23,7 @@ spec:
             - containerPort: 6379
           volumeMounts:
             - name: mongo-storage
-              mountPath: /var/lib/redis/
+              mountPath: /var/lib/redis/dump.rdb
       volumes:
         - name: mongo-storage
           persistentVolumeClaim:
