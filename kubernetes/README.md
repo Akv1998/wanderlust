@@ -51,7 +51,7 @@ kubectl get pods -n kube-system -o wide | grep -i core
 ```
 ![Alt text](https://github.com/DevMadhup/wanderlust/blob/devops/kubernetes/assets/get-coredns.png)
 
-- Run coredns pod on worker node as well for DNS resolution
+- Above step will run coredns pod on worker node as well for DNS resolution
 
 ```bash
 kubectl edit deploy coredns -n kube-system -o yaml
