@@ -71,7 +71,7 @@ sudo apt-get install -y jq
 
 sudo systemctl enable --now kubelet
 sudo systemctl start kubelet
-``
+```
 
 ### On Master node
 - <i> Create a shell script 2.sh and paste the below code and run it </i>
