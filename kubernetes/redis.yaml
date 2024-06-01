@@ -21,6 +21,13 @@ spec:
           image: redis
           ports:
             - containerPort: 6379
+          volumeMounts:
+            - name: mongo-storage
+              mountPath: /var/lib/redis/
+      volumes:
+        - name: mongo-storage
+          persistentVolumeClaim:
+            claimName: mongo-pvc
 ---
 apiVersion: v1
 kind: Service
