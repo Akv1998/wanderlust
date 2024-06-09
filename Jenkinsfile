@@ -1,42 +1,70 @@
-pipeline{
+@Library('Shared') _
+pipeline {
     agent any
+    
     environment{
-        SONAR_HOME= tool "Sonar"
+        SONAR_HOME = tool "Sonar"
     }
-    stages{
-        stage("Clone Code from GitHub"){
+    stages {
+        
+        stage("Workspace cleanup"){
             steps{
-                git url: "https://github.com/krishnaacharyaa/wanderlust.git", branch: "devops"
-            }
-        }
-        stage("SonarQube Quality Analysis"){
-            steps{
-                withSonarQubeEnv("Sonar"){
-                    sh "$SONAR_HOME/bin/sonar-scanner -Dsonar.projectName=wanderlust -Dsonar.projectKey=wanderlust"
+                script{
+                    cleanWs()
                 }
             }
         }
-        stage("OWASP Dependency Check"){
-            steps{
-                dependencyCheck additionalArguments: '--scan ./', odcInstallation: 'dc'
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-            }
-        }
-        stage("Sonar Quality Gate Scan"){
-            steps{
-                timeout(time: 2, unit: "MINUTES"){
-                    waitForQualityGate abortPipeline: false
+        
+        stage('Git: Code Checkout') {
+            steps {
+                script{
+                    code_checkout("https://github.com/DevMadhup/wanderlust.git","devops")
                 }
             }
         }
-        stage("Trivy File System Scan"){
-            steps{
-                sh "trivy fs --format  table -o trivy-fs-report.html ."
+        
+        stage('Exporting environment variables') {
+            parallel{
+                stage("Backend env setup"){
+                    steps {
+                        script{
+                            dir("Automations"){
+                                sh "bash updateBackend.sh"
+                            }
+                        }
+                    }
+                }
+                
+                stage("Frontend env setup"){
+                    steps {
+                        script{
+                            dir("Automations"){
+                                sh "bash updateFrontend.sh"
+                            }
+                        }
+                    }
+                }
             }
         }
-        stage("Deploy using Docker compose"){
+        
+        stage("OWASP: Dependency check"){
             steps{
-                sh "docker-compose up -d"
+                script{
+                    owasp_dependency()
+                }
+            }
+            post{
+                success{
+                    archiveArtifacts artifacts: '**/dependency-check-report.xml', followSymlinks: false, onlyIfSuccessful: true
+                }
+            }
+        }
+        
+        stage("SonarQube: Code Analysis"){
+            steps{
+                script{
+                    sonarqube_analysis("Sonar","wanderlust","wanderlust")
+                }
             }
         }
     }
