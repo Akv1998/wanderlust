@@ -67,5 +67,21 @@ pipeline {
                 }
             }
         }
+        
+        stage("SonarQube: Code Quality Gates"){
+            steps{
+                script{
+                    sonarqube_code_quality()
+                }
+            }
+        }
+    }
+    
+    post{
+        success{
+            build job: "Wanderlust-CD", parameters: [
+                string(name: "DOCKER_TAG", value: "latest")    
+            ]
+        }
     }
 }
