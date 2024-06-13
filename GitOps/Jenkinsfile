@@ -3,7 +3,8 @@ pipeline {
     agent {label 'Node'}
     
     parameters {
-        string(name: 'DOCKER_TAG', defaultValue: '', description: 'Docker tag of the image built by the CI job')
+        string(name: 'FRONTEND_DOCKER_TAG', defaultValue: '', description: 'Frontend Docker tag of the image built by the CI job')
+        string(name: 'BACKEND_DOCKER_TAG', defaultValue: '', description: 'Backend Docker tag of the image built by the CI job')
     }
 
     stages {
@@ -26,31 +27,28 @@ pipeline {
         stage('Verify: Docker Image Tags') {
             steps {
                 script{
-                    echo "DOCKER_TAG: ${params.DOCKER_TAG}"
+                    echo "FRONTEND_DOCKER_TAG: ${params.FRONTEND_DOCKER_TAG}"
+                    echo "BACKEND_DOCKER_TAG: ${params.BACKEND_DOCKER_TAG}"
                 }
             }
         }
         
-        stage('Exporting environment variables') {
-            parallel{
-                stage("Backend env setup"){
-                    steps {
-                        script{
-                            dir("Automations"){
-                                sh "bash updateBackend.sh"
-                            }
-                        }
+        
+        stage("Update: Kubernetes manifests"){
+            steps{
+                script{
+                    dir('kubernetes'){
+                        sh """
+                            sed -i -e 's/backend-wanderlust.*/backend-wanderlust:${params.BACKEND_DOCKER_TAG}/g' backend.yaml
+                        """
                     }
-                }
-                
-                stage("Frontend env setup"){
-                    steps {
-                        script{
-                            dir("Automations"){
-                                sh "bash updateFrontend.sh"
-                            }
-                        }
+                    
+                    dir('kubernetes'){
+                        sh """
+                            sed -i -e 's/frontend-wanderlust.*/frontend-wanderlust:${params.FRONTEND_DOCKER_TAG}/g' frontend.yaml
+                        """
                     }
+                    
                 }
             }
         }
