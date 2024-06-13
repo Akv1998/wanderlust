@@ -1,0 +1,32 @@
+@Library('Shared') _
+pipeline {
+    agent {label 'Node'}
+    parameters {
+        string(name: 'DOCKER_TAG', defaultValue: '', description: 'Docker tag of the image built by the CI job')
+    }
+    stages {
+        stage("Workspace cleanup"){
+            steps{
+                script{
+                    cleanWs()
+                }
+            }
+        }
+        
+        stage('Git: Code Checkout') {
+            steps {
+                script{
+                    code_checkout("https://github.com/DevMadhup/wanderlust.git","devops")
+                }
+            }
+        }
+        
+        stage('Verify: Docker Image Tags') {
+            steps {
+                script{
+                    echo "DOCKER_TAG: ${params.DOCKER_TAG}"
+                }
+            }
+        }
+    }
+}
