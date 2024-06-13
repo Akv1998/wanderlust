@@ -1,9 +1,11 @@
 @Library('Shared') _
 pipeline {
     agent {label 'Node'}
+    
     parameters {
         string(name: 'DOCKER_TAG', defaultValue: '', description: 'Docker tag of the image built by the CI job')
     }
+
     stages {
         stage("Workspace cleanup"){
             steps{
@@ -25,6 +27,52 @@ pipeline {
             steps {
                 script{
                     echo "DOCKER_TAG: ${params.DOCKER_TAG}"
+                }
+            }
+        }
+        
+        stage('Exporting environment variables') {
+            parallel{
+                stage("Backend env setup"){
+                    steps {
+                        script{
+                            dir("Automations"){
+                                sh "bash updateBackend.sh"
+                            }
+                        }
+                    }
+                }
+                
+                stage("Frontend env setup"){
+                    steps {
+                        script{
+                            dir("Automations"){
+                                sh "bash updateFrontend.sh"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage("Git: Code update and push to GitHub"){
+            steps{
+                script{
+                    withCredentials([gitUsernamePassword(credentialsId: 'Github-cred', gitToolName: 'Default')]) {
+                        sh '''
+                        echo "Checking repository status: "
+                        git status
+                        
+                        echo "Adding changes to git: "
+                        git add .
+                        
+                        echo "Commiting changes: "
+                        git commit -m "Updated environment variables"
+                        
+                        echo "Pushing changes to github: "
+                        git push https://github.com/DevMadhup/wanderlust.git devops
+                    '''
+                    }
                 }
             }
         }
