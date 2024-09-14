@@ -1,5 +1,4 @@
-
-# Terminal Command History for K8s Kind Voting App
+# Terminal Command History for K8s Kind wanderlust App
 
 ## 1. Creating and Managing Kubernetes Cluster with Kind
 
@@ -48,17 +47,18 @@
 
 ---
 
-## 4. Cloning and Running the Example Voting App
+## 4. Cloning and Running the wanderlust project
 
-- Clone the voting app repository:
+- Clone the wanderlust repository:
   ```bash
-  git clone https://github.com/dockersamples/example-voting-app.git
-  cd example-voting-app/
+  git clone https://github.com/Akv1998/wanderlust.git
+  cd wanderlust/
+  cd kubernetes
   ```
 
-- Apply Kubernetes YAML specifications for the voting app:
+- Apply Kubernetes YAML specifications for the wanderlust:
   ```bash
-  kubectl apply -f k8s-specifications/
+  kubectl apply -f .
   ```
 
 - List all Kubernetes resources:
@@ -66,15 +66,15 @@
   kubectl get all
   ```
 
-- Forward local ports for accessing the voting and result apps:
+- Forward local ports for accessing wanderlust apps:
   ```bash
-  kubectl port-forward service/vote 5000:5000 --address=0.0.0.0 &
-  kubectl port-forward service/result 5001:5001 --address=0.0.0.0 &
+  kubectl port-forward service/frontend 5000:5000 --address=0.0.0.0 &
+  kubectl port-forward service/backend 5001:5001 --address=0.0.0.0 &
   ```
 
 ---
 
-## 5. Managing Files in Example Voting App
+## 5. Managing Files in wanderlust
 
 - Navigate and view files:
   ```bash
